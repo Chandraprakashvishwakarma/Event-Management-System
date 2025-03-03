@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!DOCTYPE document [
+  <!ENTITY project SYSTEM "project.xml">
+]>
+<document url="index.html">
+
+  &project;
+
+  <properties>
+    <author email="jfclere@apache.org">Jean-Frederic Clere</author>
+    <title>Documentation Index</title>
+  </properties>
+
+<body>
+
+<section name="Introduction">
+
+  <p>
+    The Apache Tomcat Native Library is an optional component for use with
+    Apache Tomcat that allows Tomcat to use OpenSSL as a replacement for JSSE
+    to support TLS connections.
+  </p>
+
+</section>
+
+<section name="Headlines">
+<ul>
+
+<li><a href="news/2024.html#20240208">8 February 2024 - <b>TC-Native-2.0.7
+released</b></a>
+<p>The Apache Tomcat team is proud to announce the immediate availability of
+Tomcat Native 2.0.7 Stable.</p>
+<p>
+The sources and the binaries for selected platforms are available from the
+<a href="../download-native.cgi">Download page</a>.
+</p>
+<p>
+Please see the <a href="miscellaneous/changelog.html">Changelog</a> for a full
+list of changes.
+</p>
+</li>
+</ul>
+</section>
+
+<section name="Building">
+<subsection name="Requirements">
+    <p>
+        To build TC-Native, the following components must be installed:
+    </p>
+      <ul>
+        <li>APR library</li>
+        <li>OpenSSL libraries</li>
+        <li>Java SE Development Kit (JDK)</li>
+      </ul>
+
+    <p>
+        For Debian-based Linux distributions, these dependencies can be installed using the following command:
+    </p>
+    <source>apt-get install libapr1-dev libssl-dev openjdk-11-jdk</source>
+    <p>
+        For RPM-based Linux distributions, these dependencies can be installed using the following command:
+    </p>
+    <source>yum install apr-devel openssl-devel java-11-openjdk-devel</source>
+</subsection>
+
+<subsection name="UNIX">
+  <p>
+      On all POSIX-like systems (Linux, Solaris, HP-UX, AIX etc...), the well-known
+      configure and make are used to build TC-Native.<br/>
+      To see a description of all configuration parameters, run the following command in the <code>native</code> directory of the source distribution:
+  </p>
+    <source>./configure --help</source>
+    <p>To create the includes and makefiles necessary for building TC-Native, use the following command:</p>
+    <source
+>./configure --with-apr=$HOME/APR \
+            --with-java-home=$JAVA_HOME \
+            --with-ssl=$HOME/OPENSSL \
+            --prefix=$CATALINA_HOME</source>
+  <p>
+    Where:<br/>
+    <code>$HOME/APR</code> is the path to the APR installation, such as /usr/bin/apr-1-config.<br/>
+    <code>$JAVA_HOME</code> is the path to a JDK installation, for example, /home/jfclere/JAVA/jdk11.
+      Any JDK version should work, but it is advisable to use the same JVM version as the one you use with Tomcat.<br/>
+    <code>$HOME/OPENSSL</code> is the path where OpenSSL is installed.<br/>
+    <code>$CATALINA_HOME</code> is the path where the produced libraries will be
+    installed, such as $HOME/apache-tomcat-10.1.0<br/>
+    <br/>
+      The configure script can automatically detect most standard APR and OpenSSL installations. Therefore, an equivalent command is usually sufficient:
+  </p>
+    <source
+>./configure --with-java-home=$JAVA_HOME --prefix=$CATALINA_HOME</source>
+  <p>
+      To build and install the libraries, run:
+  </p>
+  <source>make &amp;&amp; make install</source>
+  <p>
+    The libraries will be installed in <code>$CATALINA_HOME/lib</code>.
+  </p>
+</subsection>
+
+<subsection name="Windows">
+  <p>
+    Detailed building instructions including the steps to create a standard release
+    distribution are provided on the <a
+    href="https://cwiki.apache.org/confluence/display/TOMCAT/Building+the+Tomcat+Native+Connector+binaries+for+Windows">Wiki</a>.
+  </p>
+</subsection>
+
+</section>
+
+<section name="Install and tests">
+  <subsection name="Configuring Tomcat">
+    <p>
+      Apache Tomcat comes with the <code>AprLifecycleListener</code> enabled
+      by default. However, it is recommended to check  <code>conf/server.xml</code> file
+      to ensure that the following configuration is present and uncommented:
+    </p>
+
+    <source wrapped="true"
+      ><![CDATA[<Listener className="org.apache.catalina.core.AprLifecycleListener" />]]></source>
+    <p>
+        For detailed configuration instructions, please refer to the Apache Tomcat documentation (See
+        <a href="https://tomcat.apache.org/tomcat-11.0-doc/config/listeners.html#APR_Lifecycle_Listener_-_org.apache.catalina.core.AprLifecycleListener">Tomcat 11.0.x</a>,
+        <a href="https://tomcat.apache.org/tomcat-10.1-doc/config/listeners.html#APR_Lifecycle_Listener_-_org.apache.catalina.core.AprLifecycleListener">Tomcat 10.1.x</a> and
+        <a href="https://tomcat.apache.org/tomcat-9.0-doc/config/listeners.html#APR_Lifecycle_Listener_-_org.apache.catalina.core.AprLifecycleListener">Tomcat 9.0.x</a>).
+    </p>
+
+  </subsection>
+
+<subsection name="UNIX">
+  <p>
+      To ensure the TC-Native libraries are correctly loaded, follow these steps:
+  </p>
+    <ul>
+        <li>Edit the <code>$CATALINA_HOME/bin/setenv.sh</code> file. For detailed instructions, please refer to the <code>RUNNING.txt</code> file of your Apache Tomcat distribution.</li>
+        <li>Check that TC-Native libraries exist in <code>$CATALINA_HOME/lib</code> and add the path to the TC-Native libraries to the LD_LIBRARY_PATH:<br/>
+            <source>LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CATALINA_HOME/lib<br/>export LD_LIBRARY_PATH</source></li>
+        <li>Start Tomcat and look for messages similar to the following in the logs:<br/>
+            <source wrapped="true"
+            >21-Jun-2024 11:06:23.274 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.7] using APR version [1.7.3].<br/>21-Jun-2024 11:06:23.298 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.2.1 30 Jan 2024]</source></li>
+    </ul>
+
+  <p>
+    For detailed configuration of connectors, refer to the Apache Tomcat documentation (See
+    <a href="https://tomcat.apache.org/tomcat-11.0-doc/config/http.html">Tomcat 11.0.x</a>,
+    <a href="https://tomcat.apache.org/tomcat-10.1-doc/config/http.html">Tomcat 10.1.x</a> and
+    <a href="https://tomcat.apache.org/tomcat-9.0-doc/config/http.html">Tomcat 9.0.x</a>).
+  </p>
+</subsection>
+
+<subsection name="Windows">
+  <p>
+      To ensure the TC-Native libraries are correctly loaded, follow these steps:
+  </p>
+    <ul>
+        <li>Edit the <code>$CATALINA_HOME/bin/setenv.sh</code> file. For detailed instructions, please refer to the <code>RUNNING.txt</code> file of your Apache Tomcat distribution.</li>
+        <li>Ensure that the <code>tcnative-2.dll</code> file matches CPU architecture of JVM that you use to run Tomcat (x86 or x64) and is located in the <code>$CATALINA_HOME/bin</code> directory.<br/>
+            Alternatively, you can add the path to the TC-Native libraries to the PATH environment variable:<br/>
+            <source wrapped="true"
+            >set PATH=%PATH%;C:\your\path\to\tc-native-dll</source></li>
+        <li>Start Tomcat and look for messages similar to the following in the logs:<br/>
+            <source wrapped="true"
+            >21-Jun-2024 11:06:23.274 INFO [main] org.apache.catalina.core.AprLifecycleListener.lifecycleEvent Loaded Apache Tomcat Native library [2.0.7] using APR version [1.7.3].<br/>21-Jun-2024 11:06:23.298 INFO [main] org.apache.catalina.core.AprLifecycleListener.initializeSSL OpenSSL successfully initialized [OpenSSL 3.2.1 30 Jan 2024]</source></li>
+    </ul>
+
+</subsection>
+
+</section>
+
+</body>
+</document>
