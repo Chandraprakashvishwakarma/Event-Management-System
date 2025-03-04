@@ -24,9 +24,9 @@
             </div>
         </section>
         
-        <section style="margin-top: 100px ">
-            <%@include file="/Search/Search.jsp" %>
-        </section>
+<!--        <section style="margin-top: 100px ">
+            <%--<%@include file="/Search/Search.jsp" %>--%>
+        </section>-->
 
         <main>
             <section class="slick-slideshow">   

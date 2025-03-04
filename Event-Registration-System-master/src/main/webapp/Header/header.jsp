@@ -1,5 +1,23 @@
 <%@page import="event_registration_system.UserDAO"%>
 <%@page import="event_registration_system.User"%>
+<%@ page import="java.util.List" %>
+<%@page import="event_registration_system.Event"%>
+
+<%
+    List<Event> events = (List<Event>) request.getAttribute("filteredEvents");
+%>
+
+<script>
+    function closeSearchWindow() {
+        document.getElementById("headerDiv").style.display = "block";
+        document.getElementById("searchDiv").style.display = "none";
+    }
+    function openSearchWindow() {
+        document.getElementById("headerDiv").style.display = "none";
+        document.getElementById("searchDiv").style.display = "block";
+    }
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -16,7 +34,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand-lg">
-            <div class="container">
+            <div class="container" id="headerDiv">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -89,8 +107,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="${pageContext.request.contextPath}/Account/LogOut.jsp">Log-Out</a>
                         </li>
-
                         <%}%>
+                        <li class="nav-item">
+                            <a class="nav-link" onclick="openSearchWindow()">Search</a>
+                        </li>
                     </ul>
                     <%if (user == null) {%>
                     <div class="d-none d-lg-block">
@@ -98,6 +118,22 @@
                     </div>
                     <%}%>
                 </div>
+            </div>
+            <div class="container" id="searchDiv" style="display: none">
+                <form action="/Event-Registration-System/EventSearchServlet" method="GET">
+                    <input type="text" name="name" placeholder="Event Name">
+                    <input type="text" name="city" placeholder="City">
+                    <input type="date" name="date">
+                    <button class="btn custom-btn" style="padding-left: 40px;padding-right: 40px " type="submit">Search</button>
+                    <span class="btn custom-btn" style="padding-left: 40px;padding-right: 40px; margin-left: 39%" id="close" onclick="closeSearchWindow()"> X </span>
+                </form>
+                
+
+                <br>
+                <% if (events != null) {%>
+                <%--<%@include file="Search/SearchResults.jsp" %>--%>
+                <jsp:include page="Search/SearchResults.jsp" />
+                <%}%>
             </div>
         </nav>
 

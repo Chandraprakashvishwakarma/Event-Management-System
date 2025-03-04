@@ -27,7 +27,7 @@ public class ResetPassword extends HttpServlet {
             String hashedPassword = Hash.hashPassword(password);
             user.setPassword(hashedPassword);
             UserDAO.updateUser(user);
-            response.sendRedirect("index.jsp");
+            response.sendRedirect("Login/login.jsp");
         }
     }
 }

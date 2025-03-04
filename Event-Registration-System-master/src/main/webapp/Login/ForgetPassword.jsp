@@ -21,6 +21,7 @@
             alert("Please enter a valid email address.");
             return;
         }
+        document.getElementById("verBtn").innerHTML = "Loading...";
 
         fetch("/Event-Registration-System/ForgetPassword", {
             method: "POST",
@@ -29,20 +30,31 @@
             },
             body: "email=" + encodeURIComponent(email) // Sending email in request body
         })
-                .then(response => response.text()) // Read response
+                .then(response => {
+                    if (!response.ok) {  // If response status is not OK (e.g., 404)
+                        document.getElementById("verBtn").innerHTML = "Send Verification Code";
+                        if (response.status === 404) {
+                            throw new Error("Email not found");
+                        } else {
+                            throw new Error("Something went wrong");
+                        }
+
+                    }
+                    return response.text(); // Read response if status is OK
+                })
                 .then(data => {
                     alert("OTP Sent successfully, It expires in 5 minutes.");
-            document.getElementById("verDiv").style.display = "block";
-        document.getElementById("verBtn").style.display = "none";
-        document.getElementById("verBtn1").style.display = "block";
-            
-        }) // Show success message
-                .catch(error => console.error("Error:", error));
+                    document.getElementById("verDiv").style.display = "block";
+                    document.getElementById("verBtn").style.display = "none";
+                    document.getElementById("verBtn1").style.display = "block";
+                })
+                .catch(error => {
+                    alert(error.message); // Alert "Email not found" if 404, or "Something went wrong" otherwise
+                    console.error("Error:", error);
+                });
+
     }
 
-//                                                function verify(){
-//                                                    request.set("Verify Button Clicked");
-//                                                }
 </script>
 
 <%
@@ -119,9 +131,9 @@
                                             <%}%>
 
                                             <a class="btn custom-btn form-control mt-4 mb-3" id="verBtn" onclick="sendOpt();">Send Verification Code</a>
-                                            
+
                                             <button class="btn custom-btn form-control mt-4 mb-3" type="submit" id="verBtn1" style="display: none">Verify</button>
-                                            
+
                                         </form>
                                     </div>
                                 </div>

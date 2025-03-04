@@ -36,7 +36,9 @@ public class ForgetPassword extends HttpServlet {
 
         if (userId == null) {
             System.out.println("null check worked");
-            response.sendRedirect("Login/ForgetPassword.jsp?emailNotExist=true");
+//            response.sendRedirect("Login/ForgetPassword.jsp?emailNotExist=true");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // Set 404 NOT FOUND
+//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "User not found with Email: "+recipientEmail);
             return;
         }
 
