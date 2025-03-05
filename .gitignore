@@ -1,6 +1,4 @@
 .DS_Store
 target/
-.mvn/
-mvnw
-mvnw.cmd
+
 
